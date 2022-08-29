@@ -23,6 +23,8 @@ refs.loadMoreBtn.style.display = 'none';
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
+let totalHits = 0;
+
 refs.loadMoreBtn.style.display = 'none';
 
 async function onSearch(evt) {
@@ -46,7 +48,9 @@ async function onSearch(evt) {
     return;
   }
 
-  totalHits = images.totalHits;
+  totalHits = images.totalHits;  
+
+  totalHits -= images.hits.length;
 
   const markup = createMarkup(images.hits);
 
@@ -65,6 +69,11 @@ async function onLoadMore() {
   totalHits -= images.hits.length;
 
   addToHTML(markup);
+
+  if (totalHits === 0 || totalHits < 0) {
+    Notify.info("We're sorry, but you've reached the end of search results.");
+    return;
+  }
 
   toggleLoadMoreBtn(totalHits);
 
